@@ -6,7 +6,7 @@ TaskList = React.createClass({
 
     let taskList = this.props.tasks.map((task) => {
       //console.log("task is " + task.toString());
-      return <Task key={task._id} task={task} />;
+      return <Task key={task._id} task={task} handleTaskCompleted={this.props.handleTaskCompleted} handleTaskDelete={this.props.handleTaskDelete} />;
     });
 
     return(

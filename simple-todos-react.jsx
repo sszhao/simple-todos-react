@@ -86,6 +86,26 @@
 
 	Note that the only state provided by Meteor is tasks. Everything else is provide by React
 
+	=== Step 5: Inverse Data Flow & Interaction 
+
+	What are the states need to be determined by users? 
+
+	= Inverse Data Flow (require callback passed down as props)
+	the submitted inputText from TaskForm -> TodoPanel 
+	the itemCompleted from Task -> TodoPanel
+	the deletion from Task -> TodoPanel 
+	the selectionScope from ControlBar -> TodoPanel 
+
+	Methods need to be provided by TodoPanel as callbacks 
+		InsertTask
+		ToggleItemCompletion
+		DeleteTask
+		SetSelectionScope
+
+	= Data Flow at the same level (handle directly in component)
+	ToggleItemCompleted -> Task
+	onChange (of text) -> TaskForm
+	MarkAllAsCompleted -> TodoPanel
 
 */
 

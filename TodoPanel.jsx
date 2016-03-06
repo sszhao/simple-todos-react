@@ -15,52 +15,92 @@ TodoPanel = React.createClass({
   },
   // Loads items from the Tasks collection and puts them on this.data.tasks
   getMeteorData() {
-
-    if(this.state.selectionScope === 1){ //scope is completed is false
-      return {
-        tasks: Tasks.find({completed:false}).fetch()
-      } 
-    }
-    else if(this.state.selectionScope === 2) //scople is completed is true
-    {
-      return {
-        tasks: Tasks.find({completed:true}).fetch()
-      }
-    }
-    else { //scope is all
-     return {
+    return{
         tasks: Tasks.find({}).fetch()
       } 
+  },
+  toggleTaskCompleted(taskID, isCompleted){
+      console.log("task completed " + taskID);
+      Tasks.update({_id:taskID}, {$set: {completed:isCompleted}});
+  },
+  handleTaskSubmit(text){
+    let trimText = text.trim();
+    if(trimText !== ""){
+      Tasks.insert({text:trimText, completed:false, createdAt: new Date()});
     }
   },
-
+  handleTaskDelete(taskID){
+    Tasks.remove({_id:taskID});
+  },
+  handleAllChecked(){
+    if(this.state.allCompleted === false){
+      this.data.tasks.map((task) => {
+        Tasks.update({_id:task._id}, {$set: {completed:true}})
+      });
+      this.setState({
+        allCompleted:true
+      });
+    }else{
+      this.setState({
+        allCompleted:false
+      });
+    }
+  },
+  handleScopeChange(value){
+    this.setState({
+        selectionScope:value
+      });
+  },
+  clearCompleted(){
+    this.data.tasks.map((task) => {
+      //console.log("task is " + task.toString());
+      if(task.completed === true){
+        Tasks.remove({_id:task._id});
+      }
+    });
+  },
   render() {
 
     let incompleteNumber =0;
     let completeNumber = 0;
 
+    var completedTasks = [];
+    var incompletedTasks = [];
+
     this.data.tasks.map((task) => {
       //console.log("task is " + task.toString());
       if(task.completed === true){
         completeNumber++;
+        completedTasks.push(task);
       }
       else if(task.completed === false){
         incompleteNumber++;
+        incompletedTasks.push(task);
       }
     });
+
+
+    var myTasks = this.data.tasks;
+
+    if(this.state.selectionScope === 1){
+      myTasks = incompletedTasks;
+    }
+    else if(this.state.selectionScope === 2){
+      myTasks = completedTasks;
+    }
 
     return (
       <div className="container">
         <header>
           <h1>Todo List</h1>
-          <TaskForm />
+          <TaskForm handleTaskSubmit={this.handleTaskSubmit}/>
           <div className="checkboxAllCompleted">
-            <input type="checkbox" name="checkBoxAllCompleted" />
+            <input type="checkbox" name="checkBoxAllCompleted" checked={this.allCompleted} onClick={this.handleAllChecked}/>
             <label>Mark all as completed </label>
           </div>
         </header>
-           <TaskList tasks={this.data.tasks}/>
-          <ControlBar numberOfIncompletedItems={incompleteNumber} numberOfCompletedItems={completeNumber} />
+           <TaskList tasks={myTasks} handleTaskCompleted={this.toggleTaskCompleted} handleTaskDelete={this.handleTaskDelete}/>
+           <ControlBar selectionScope={this.state.selectionScope} handleScopeChange={this.handleScopeChange} clearCompleted={this.clearCompleted} numberOfIncompletedItems={incompleteNumber} numberOfCompletedItems={completeNumber} />
         </div>
     );
   }

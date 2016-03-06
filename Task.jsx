@@ -1,24 +1,22 @@
 // Task component - represents a single todo item
 Task = React.createClass({
-  getInitialState(){
-    return {
-      itemCompleted: false
-    };
+  toggleCompleted(){
+    //ask the parent to handle this event 
+    this.props.handleTaskCompleted(this.props.task._id, !this.props.task.completed);
+    console.log("the key is " + this.props.task._id + " " + !this.props.task.completed);
   },
-  /*toggleCompleted(){
-    this.setState({
-      itemCompleted: !this.state.itemCompleted
-    });
-  },*/
+  handleTaskDelete(){
+    this.props.handleTaskDelete(this.props.task._id);
+  },
   propTypes: {
     // This component gets the task to display through a React prop.
     // We can use propTypes to indicate it is required
     task: React.PropTypes.object.isRequired
   },
   render() {
-    let checked = (this.state.itemCompleted === true) ? "checked" : "";
+    var completedText = (this.props.task.completed === true) ? " is completed" : "";
     return (
-      <li><input type="checkbox" className="CheckBoxItemCompleted" /> {this.props.task.text}<button className="DeleteButton">X</button></li>
+      <li><input type="checkbox" className="CheckBoxItemCompleted" checked={this.props.task.completed} onClick={this.toggleCompleted}/> {this.props.task.text} {completedText} <button className="DeleteButton" onClick={this.handleTaskDelete}>X</button></li>
     );
   }
 });
