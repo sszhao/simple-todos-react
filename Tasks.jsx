@@ -7,7 +7,7 @@ Task = React.createClass({
   },
   render() {
     return (
-      <li>{this.props.task.text}</li>
+      <li><button className="CheckBoxItemCompleted"> </button>{this.props.task.text}<button className="DeleteButton">X</button></li>
     );
   }
 });
