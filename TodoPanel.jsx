@@ -7,6 +7,10 @@ TodoPanel = React.createClass({
         <header>
           <h1>Todo List</h1>
           <TaskForm />
+          <div className="checkboxAllCompleted">
+            <input type="checkbox" name="checkBoxAllCompleted" />
+            <label>Mark all as completed </label>
+          </div>
         </header>
  
           <TaskList tasks={this.props.tasks}/>
