@@ -1,13 +1,11 @@
 // TaskList component - represents a list of tasks 
 TaskList = React.createClass({
-  propTypes: {
-    // This component gets the task to display through a React prop.
-    // We can use propTypes to indicate it is required
-    tasks: React.PropTypes.object.isRequired
-  },
+  
   render() {
-    
+    //console.log("tasks is " + this.props.tasks.toString());
+
     let taskList = this.props.tasks.map((task) => {
+      //console.log("task is " + task.toString());
       return <Task key={task._id} task={task} />;
     });
 

@@ -1,7 +1,11 @@
 
 TaskForm = React.createClass({
+	getInitialState(){
+		return {
+			inputText:""
+		};
+	},
 
-	
 	render:function(){
 		return (
 			<form className="new-task" >
@@ -9,7 +13,7 @@ TaskForm = React.createClass({
               type="text"
               ref="textInput"
               placeholder="Type to add new tasks"
-              value="" 
+              value={this.state.inputText} 
               />
           	</form>
 		);
