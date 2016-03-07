@@ -32,9 +32,9 @@
 if (Meteor.isClient) {
   // This code is executed on the client only
  var tasks = [
-  {text:"Todo Item 1"},
-  {text:"Todo Item 2"},
-  {text:"Todo Item 3"}
+  	{_id:"1", text:"Todo Item 1"},
+  	{_id:"2", text:"Todo Item 2"},
+  	{_id:"3", text:"Todo Item 3"}
  ];
 
  Meteor.startup(function () {
