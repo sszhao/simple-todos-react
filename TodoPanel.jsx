@@ -15,23 +15,9 @@ TodoPanel = React.createClass({
   },
   // Loads items from the Tasks collection and puts them on this.data.tasks
   getMeteorData() {
-
-    if(this.state.selectionScope === 1){ //scope is completed is false
-      return {
-        tasks: Tasks.find({completed:false}).fetch()
+    return{
+        tasks: Tasks.find({}, {sort:{createdAt: -1}}).fetch()
       } 
-    }
-    else if(this.state.selectionScope === 2) //scople is completed is true
-    {
-      return {
-        tasks: Tasks.find({completed:true}).fetch()
-      }
-    }
-    else { //scope is all
-     return {
-        tasks: Tasks.find({}).fetch()
-      } 
-    }
   },
 
   render() {
@@ -39,15 +25,30 @@ TodoPanel = React.createClass({
     let incompleteNumber =0;
     let completeNumber = 0;
 
+    let completedTasks = [];
+    let incompletedTasks = [];
+
     this.data.tasks.map((task) => {
-      //console.log("task is " + task.toString());
+      
       if(task.completed === true){
         completeNumber++;
+        completedTasks.push(task);
       }
       else if(task.completed === false){
         incompleteNumber++;
+        incompletedTasks.push(task);
       }
     });
+
+
+    var myTasks = this.data.tasks;
+
+    if(this.state.selectionScope === 1){
+      myTasks = incompletedTasks;
+    }
+    else if(this.state.selectionScope === 2){
+      myTasks = completedTasks;
+    }
 
     return (
       <div className="container">
@@ -55,12 +56,12 @@ TodoPanel = React.createClass({
           <h1>Todo List</h1>
           <TaskForm />
           <div className="checkboxAllCompleted">
-            <input type="checkbox" name="checkBoxAllCompleted" />
+            <input type="checkbox" name="checkBoxAllCompleted" checked={this.allCompleted} />
             <label>Mark all as completed </label>
           </div>
         </header>
-           <TaskList tasks={this.data.tasks}/>
-          <ControlBar numberOfIncompletedItems={incompleteNumber} numberOfCompletedItems={completeNumber} />
+           <TaskList tasks={myTasks} />
+           <ControlBar selectionScope={this.state.selectionScope} numberOfIncompletedItems={incompleteNumber} numberOfCompletedItems={completeNumber} />
         </div>
     );
   }
