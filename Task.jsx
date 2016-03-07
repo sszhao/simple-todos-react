@@ -16,9 +16,10 @@ Task = React.createClass({
     task: React.PropTypes.object.isRequired
   },
   render() {
-    let checked = (this.state.itemCompleted === true) ? "checked" : "";
+    var completedText = (this.props.task.completed === true) ? "<strike>"+this.props.task.text+"</strike>" : this.props.task.text;
     return (
-      <li><input type="checkbox" className="CheckBoxItemCompleted" /> {this.props.task.text}<button className="DeleteButton">X</button></li>
+      <li><input type="checkbox" className="CheckBoxItemCompleted" checked={this.props.task.completed} /><span dangerouslySetInnerHTML={{__html: completedText}}></span><button className="DeleteButton">X</button></li>
     );
+
   }
 });
