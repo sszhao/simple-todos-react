@@ -12,7 +12,7 @@
 	=== Step 1: Component hierarchy 
 
 	TodoPanel 
-		TaskForm [markall as completed, input field]
+		TaskForm [markall as completed checkbox, input textfield]
 		TaskList
 			Task [checkbox, todoText, deleteButton]
 		ControlBar [Number of items, SelectAllButton, SelectActiveButton, SelectCompleteButton, ClearCompletedButton]
@@ -37,7 +37,7 @@
 		TaskList
 			tasks : {Collection} [State? Yes]
 		Task 
-			completed : {true, false} [State? Yes]
+			completed : {true, false} [State? No, this can be derived from Tasks] Note that I made a mistake to think of it as state in the first draft. 
 			visible : {true, false} [State? No, can be derived from	Tasks & SelectionScope]
 			todoText : String [State? No, can be derived from Tasks] 
 		ControlBar 
@@ -50,8 +50,9 @@
 		allCompleted
 		inputText
 		tasks 
-		itemCompleted 
 		selectionScope 
+		//itemCompleted (not a state, but I accidentally thought it was a state in the first draft)
+
 
 	=== Step 4 Determine where each state should live
 
@@ -64,11 +65,11 @@
 	tasks affects the UI of (TaskList, Task, ControlBar)
 		-> should live in TodoPanel 
 
-	ItemCompleted affects the UI of Task)
-		-> should live in	Task
-
 	SelectionScope affects the UI of (ControlBar, TaskList)
 		-> Should live in TodoPanel
+
+	//ItemCompleted affects the UI of Task)
+	//	-> should live in	Task
 
 	Therefore, the data structure is the following 
 
@@ -81,8 +82,8 @@
 	TaskForm
 		inputText: (default "")
 
-	Task
-		itemCompleted: boolean (default: false)
+	//Task
+	//	itemCompleted: boolean (default: false)
 
 	Note that the only state provided by Meteor is tasks. Everything else is provide by React
 
@@ -102,8 +103,7 @@
 		DeleteTask
 		SetSelectionScope
 
-	= Data Flow at the same level (handle directly in component)
-	ToggleItemCompleted -> Task
+	= Data Flow at the same level (handle directly in component)	
 	onChange (of text) -> TaskForm
 	MarkAllAsCompleted -> TodoPanel
 
@@ -138,7 +138,7 @@ if (Meteor.isServer) {
 
 	//publish the tasks by the sorted order of newer tasks appears on the top
 	Meteor.publish("tasks", function () {
-  		return Tasks.find({}, {sort: {createdAt: -1}});
+  		return Tasks.find({});
   	});
   });
 }
