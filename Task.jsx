@@ -14,9 +14,14 @@ Task = React.createClass({
     task: React.PropTypes.object.isRequired
   },
   render() {
-    var completedText = (this.props.task.completed === true) ? "<strike>"+this.props.task.text+"</strike>" : this.props.task.text;
+    //var completedText = (this.props.task.completed === true) ? "<strike>"+this.props.task.text+"</strike>" : this.props.task.text;
     return (
-      <li><input type="checkbox" className="CheckBoxItemCompleted" checked={this.props.task.completed} onChange={this.toggleCompleted} /><span dangerouslySetInnerHTML={{__html: completedText}}></span><button className="DeleteButton" onClick={this.handleTaskDelete}>X</button></li>
+      //<li><input type="checkbox" className="CheckBoxItemCompleted" checked={this.props.task.completed} onChange={this.toggleCompleted} /><span dangerouslySetInnerHTML={{__html: completedText}}></span><button className="DeleteButton" onClick={this.handleTaskDelete}>X</button></li>
+      <li>
+        <input type="checkbox" className="CheckBoxItemCompleted" checked={this.props.task.completed} onChange={this.toggleCompleted} />
+        { this.props.task.completed === true ? <strike>{this.props.task.text}</strike> :this.props.task.text }
+        <button className="DeleteButton" onClick={this.handleTaskDelete}>X</button>
+      </li>
     );
   }
 });

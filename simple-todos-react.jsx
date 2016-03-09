@@ -94,14 +94,16 @@
 	= Inverse Data Flow (require callback passed down as props)
 	the submitted inputText from TaskForm -> TodoPanel 
 	the itemCompleted from Task -> TodoPanel
-	the deletion from Task -> TodoPanel 
+	the itemDeletion from Task -> TodoPanel 
 	the selectionScope from ControlBar -> TodoPanel 
+	the clearCompleted from ControlBar -> TodoPanel
 
 	Methods need to be provided by TodoPanel as callbacks 
 		InsertTask
 		ToggleItemCompletion
 		DeleteTask
 		SetSelectionScope
+		ClearCompletedTasks
 
 	= Data Flow at the same level (handle directly in component)	
 	onChange (of text) -> TaskForm
@@ -138,7 +140,7 @@ if (Meteor.isServer) {
 
 	//publish the tasks by the sorted order of newer tasks appears on the top
 	Meteor.publish("tasks", function () {
-  		return Tasks.find({});
+  		return Tasks.find({}, {sort:{createdAt:-1}});
   	});
   });
 }
