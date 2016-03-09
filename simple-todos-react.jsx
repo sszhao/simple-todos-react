@@ -116,7 +116,7 @@ Tasks = new Mongo.Collection("tasks");
 
 if (Meteor.isClient) {
  // This code is executed on the client only
- 
+
  //configure the account to only require username
  Accounts.ui.config({
     passwordSignupFields: "USERNAME_ONLY"
@@ -149,3 +149,46 @@ if (Meteor.isServer) {
   	});
   });
 }
+
+Meteor.methods({
+  addTask(text) {
+    // Make sure the user is logged in before inserting a task
+    if (! Meteor.userId()) {
+      throw new Meteor.Error("you haven't logged in");
+    }
+ 
+    Tasks.insert({
+      text: text,
+      completed: false,
+      createdAt: new Date(),
+      owner: Meteor.userId(),
+      username: Meteor.user().username
+    });
+  },
+ 
+  removeTask(taskId) {
+  	if (! Meteor.userId()) {
+      throw new Meteor.Error("you haven't logged in");
+    }
+
+    const task = Tasks.findOne(taskId);
+    if(task.owner !== Meteor.userId() && Meteor.user().username !== "admin") {
+		throw new Meteor.Error("action not allowed: you are not the owner of the task");
+    }
+
+    Tasks.remove({_id:taskId});
+  },
+ 
+  setCompleted(taskId, setCompleted) {
+  	if (! Meteor.userId()) {
+      throw new Meteor.Error("not-authorized");
+    }
+
+    const task = Tasks.findOne(taskId);
+    if(task.owner !== Meteor.userId() && Meteor.user().username !== "admin") {
+		throw new Meteor.Error("action not allowed: you are not the owner of the task");
+    }
+
+    Tasks.update({_id:taskId}, { $set: { completed: setCompleted} });
+  }
+});

@@ -21,29 +21,34 @@ TodoPanel = React.createClass({
       } 
   },
   toggleTaskCompleted(taskID, isCompleted){
-      console.log("task completed " + taskID);
-      Tasks.update({_id:taskID}, {$set: {completed:isCompleted}});
+      //console.log("task completed " + taskID);
+      //Tasks.update({_id:taskID}, {$set: {completed:isCompleted}});
+      Meteor.call("setCompleted", taskID, isCompleted);
   },
   handleTaskSubmit(text){
     let trimText = text.trim();
     if(trimText !== ""){
-      Tasks.insert({
+
+      Meteor.call("addTask", trimText);
+      /*Tasks.insert({
         text:trimText, 
         completed:false, 
         createdAt: new Date(),
         //add owner and username to the database 
         owner: Meteor.userId(),           // _id of logged in user
         username: Meteor.user().username  // username of logged in user
-      });
+      });*/
     }
   },
   handleTaskDelete(taskID){
-    Tasks.remove({_id:taskID});
+    //Tasks.remove({_id:taskID});
+    Meteor.call("removeTask", taskID);
   },
   handleAllChecked(){
     if(this.state.allCompleted === false){
       this.data.tasks.map((task) => {
-        Tasks.update({_id:task._id}, {$set: {completed:true}})
+        //Tasks.update({_id:task._id}, {$set: {completed:true}})
+        Meteor.call("setCompleted", task._id, true);
       });
       this.setState({
         allCompleted:true
@@ -63,7 +68,7 @@ TodoPanel = React.createClass({
     this.data.tasks.map((task) => {
       //console.log("task is " + task.toString());
       if(task.completed === true){
-        Tasks.remove({_id:task._id});
+        Meteor.call("removeTask", task._id);
       }
     });
   },
