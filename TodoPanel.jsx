@@ -16,7 +16,8 @@ TodoPanel = React.createClass({
   // Loads items from the Tasks collection and puts them on this.data.tasks
   getMeteorData() {
     return{
-        tasks: Tasks.find({}, {sort:{createdAt: -1}}).fetch()
+        tasks: Tasks.find({}, {sort:{createdAt: -1}}).fetch(),
+        currentUser: Meteor.user()
       } 
   },
   toggleTaskCompleted(taskID, isCompleted){
@@ -26,7 +27,14 @@ TodoPanel = React.createClass({
   handleTaskSubmit(text){
     let trimText = text.trim();
     if(trimText !== ""){
-      Tasks.insert({text:trimText, completed:false, createdAt: new Date()});
+      Tasks.insert({
+        text:trimText, 
+        completed:false, 
+        createdAt: new Date(),
+        //add owner and username to the database 
+        owner: Meteor.userId(),           // _id of logged in user
+        username: Meteor.user().username  // username of logged in user
+      });
     }
   },
   handleTaskDelete(taskID){
@@ -93,7 +101,13 @@ TodoPanel = React.createClass({
       <div className="container">
         <header>
           <h1>Todo List</h1>
-          <TaskForm handleTaskSubmit={this.handleTaskSubmit}/>
+          {//add accountUIWrapper to the header 
+          }
+          <AccountsUIWrapper />
+
+          { this.data.currentUser ?
+          <TaskForm handleTaskSubmit={this.handleTaskSubmit}/> :""
+          }
           <div className="checkboxAllCompleted">
             <input type="checkbox" name="checkBoxAllCompleted" checked={this.allCompleted} onClick={this.handleAllChecked}/>
             <label>Mark all as completed </label>

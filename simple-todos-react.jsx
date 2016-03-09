@@ -116,6 +116,11 @@ Tasks = new Mongo.Collection("tasks");
 
 if (Meteor.isClient) {
  // This code is executed on the client only
+ 
+ //configure the account to only require username
+ Accounts.ui.config({
+    passwordSignupFields: "USERNAME_ONLY"
+  });
 
  //Subscribe to the server's task collection 
  Meteor.subscribe("tasks"); 
